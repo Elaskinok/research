@@ -37,12 +37,22 @@
 </head>
 <body>
 <h1>Research Charts</h1>
+<div id="charts"></div>
 
-<!-- Add new charts here: copy the chart-card block and point src to the new chart HTML -->
-
-<div class="chart-card">
-    <iframe src="funding_rate_yield_Y.html" onload="this.style.height = this.contentDocument.body.scrollHeight + 'px'"></iframe>
-</div>
-
+<script>
+    fetch('./charts.json')
+        .then(r => r.json())
+        .then(srcs => {
+            const container = document.getElementById('charts');
+            for (const src of srcs) {
+                const card = document.createElement('div');
+                card.className = 'chart-card';
+                const iframe = document.createElement('iframe');
+                iframe.src = src;
+                card.appendChild(iframe);
+                container.appendChild(card);
+            }
+        });
+</script>
 </body>
 </html>
