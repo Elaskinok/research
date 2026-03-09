@@ -25,7 +25,6 @@
             margin: 0 auto;
             height: 0;
             border: none;
-            overflow: hidden;
         }
     </style>
 </head>
@@ -54,6 +53,7 @@
             for (const src of srcs) {
                 const iframe = document.createElement('iframe');
                 iframe.src = src;
+                iframe.scrolling = 'no';
                 container.appendChild(iframe);
             }
         });
