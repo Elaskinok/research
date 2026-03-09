@@ -51,7 +51,7 @@
             timeScale: { timeVisible: true },
         });
 
-        const dir = './funding_rate_yield_Y_data';
+        const dir = './funding_rate_yield_Y__data';
 
         const indexRes = await fetch(`${dir}/index.json`);
         if (!indexRes.ok) throw new Error(`Failed to load index: ${indexRes.status}`);

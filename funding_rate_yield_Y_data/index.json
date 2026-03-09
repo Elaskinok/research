@@ -1,1 +1,4 @@
-["bybit", "binance"]
+[
+  "binance",
+  "bybit"
+]
