@@ -6,7 +6,7 @@
     <title>Funding rate yearly yield %</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: sans-serif; background: #151518; padding: 20px; }
+        html, body { background: #151518; font-family: sans-serif; padding: 20px; }
 
         .chart-title {
             margin-bottom: 16px;
@@ -34,21 +34,11 @@
 <div id="chart"></div>
 
 <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<script src="./chart_component.js"></script>
 <script>
-    const COLORS = ['#2962FF', '#E91E63', '#FF6D00', '#00BCD4', '#4CAF50', '#9C27B0'];
     const DIR = './funding_rate_yield_Y_data';
-
     const coin = new URLSearchParams(location.search).get('coin');
     document.getElementById('title').textContent = `Funding rate yearly yield % — ${coin}`;
-
-    const errorBox = document.getElementById('error');
-    const chartContainer = document.getElementById('chart');
-
-    function showError(message) {
-        errorBox.textContent = message;
-        errorBox.style.display = 'block';
-        console.error(message);
-    }
 
     async function fetchJson(url) {
         const res = await fetch(url);
@@ -68,37 +58,21 @@
             )
         ).filter(Boolean);
 
-        const chart = LightweightCharts.createChart(chartContainer, {
-            width: chartContainer.clientWidth,
-            height: 460,
-            timeScale: { timeVisible: true },
-            layout: {
-                background: { color: '#151518' },
-                textColor: '#d1d4dc',
-            },
-            grid: {
-                vertLines: { color: '#2a2a2e' },
-                horzLines: { color: '#2a2a2e' },
-            },
-        });
+        const seriesList = await Promise.all(
+            exchangesWithCoin.map(async exchange => ({
+                label: exchange.charAt(0).toUpperCase() + exchange.slice(1),
+                data: await fetchJson(`${DIR}/${exchange}/${coin}.json`),
+            }))
+        );
 
-        await Promise.all(exchangesWithCoin.map(async (exchange, i) => {
-            const data = await fetchJson(`${DIR}/${exchange}/${coin}.json`);
-            const series = chart.addSeries(LightweightCharts.LineSeries, {
-                color: COLORS[i % COLORS.length],
-                title: exchange.charAt(0).toUpperCase() + exchange.slice(1),
-            });
-            series.setData(data);
-        }));
-
-        chart.timeScale().fitContent();
-
-        window.addEventListener('resize', () => {
-            chart.resize(chartContainer.clientWidth, 460);
-        });
+        ChartComponent.create(document.getElementById('chart'), seriesList);
     }
 
-    main().catch(err => showError(err.message));
+    main().catch(err => {
+        const box = document.getElementById('error');
+        box.textContent = err.message;
+        box.style.display = 'block';
+    });
 </script>
 </body>
 </html>

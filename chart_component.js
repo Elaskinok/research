@@ -1,0 +1,42 @@
+// Requires LightweightCharts to be loaded first (standalone build)
+window.ChartComponent = {
+    COLORS: ['#2962FF', '#E91E63', '#FF6D00', '#00BCD4', '#4CAF50', '#9C27B0'],
+
+    THEME: {
+        layout: {
+            background: { color: '#151518' },
+            textColor: '#d1d4dc',
+        },
+        grid: {
+            vertLines: { color: '#2a2a2e' },
+            horzLines: { color: '#2a2a2e' },
+        },
+        crosshair: {
+            vertLine: { color: '#758696', labelBackgroundColor: '#3d5068' },
+            horzLine: { color: '#758696', labelBackgroundColor: '#3d5068' },
+        },
+    },
+
+    // seriesList: [{ label: string, data: [{time, value}] }, ...]
+    create(container, seriesList) {
+        const chart = LightweightCharts.createChart(container, {
+            width: container.clientWidth,
+            height: 460,
+            timeScale: { timeVisible: true },
+            ...this.THEME,
+        });
+
+        seriesList.forEach(({ label, data }, i) => {
+            const series = chart.addSeries(LightweightCharts.LineSeries, {
+                color: this.COLORS[i % this.COLORS.length],
+                title: label,
+            });
+            series.setData(data);
+        });
+
+        chart.timeScale().fitContent();
+        window.addEventListener('resize', () => chart.resize(container.clientWidth, 460));
+
+        return chart;
+    },
+};

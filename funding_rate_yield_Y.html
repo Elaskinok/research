@@ -35,8 +35,8 @@
 <div id="charts"></div>
 
 <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<script src="./chart_component.js"></script>
 <script>
-    const COLORS = ['#2962FF', '#E91E63', '#FF6D00', '#00BCD4', '#4CAF50', '#9C27B0'];
     const DIR = './funding_rate_yield_Y_data';
 
     async function fetchJson(url) {
@@ -56,9 +56,17 @@
         );
 
         const allCoins = [...new Set(exchangeCoins.flatMap(e => e.coins))];
-        const container = document.getElementById('charts');
 
         for (const coin of allCoins) {
+            const exchangesWithCoin = exchangeCoins.filter(e => e.coins.includes(coin));
+
+            const seriesList = await Promise.all(
+                exchangesWithCoin.map(async ({ exchange }) => ({
+                    label: exchange.charAt(0).toUpperCase() + exchange.slice(1),
+                    data: await fetchJson(`${DIR}/${exchange}/${coin}.json`),
+                }))
+            );
+
             const block = document.createElement('div');
             block.className = 'chart-block';
 
@@ -67,44 +75,12 @@
             title.textContent = `Funding rate yearly yield % — ${coin}`;
             block.appendChild(title);
 
-            const chartContainer = document.createElement('div');
-            chartContainer.className = 'chart-container';
-            block.appendChild(chartContainer);
-            container.appendChild(block);
+            const container = document.createElement('div');
+            container.className = 'chart-container';
+            block.appendChild(container);
+            document.getElementById('charts').appendChild(block);
 
-            const chart = LightweightCharts.createChart(chartContainer, {
-                width: chartContainer.clientWidth,
-                height: 460,
-                timeScale: { timeVisible: true },
-                layout: {
-                    background: { color: '#151518' },
-                    textColor: '#d1d4dc',
-                },
-                grid: {
-                    vertLines: { color: '#2a2a2e' },
-                    horzLines: { color: '#2a2a2e' },
-                },
-                crosshair: {
-                    vertLine: { color: '#758696', labelBackgroundColor: '#3d5068' },
-                    horzLine: { color: '#758696', labelBackgroundColor: '#3d5068' },
-                },
-            });
-
-            const exchangesWithCoin = exchangeCoins.filter(e => e.coins.includes(coin));
-            await Promise.all(exchangesWithCoin.map(async ({ exchange }, i) => {
-                const data = await fetchJson(`${DIR}/${exchange}/${coin}.json`);
-                const series = chart.addSeries(LightweightCharts.LineSeries, {
-                    color: COLORS[i % COLORS.length],
-                    title: exchange.charAt(0).toUpperCase() + exchange.slice(1),
-                });
-                series.setData(data);
-            }));
-
-            chart.timeScale().fitContent();
-
-            window.addEventListener('resize', () => {
-                chart.resize(chartContainer.clientWidth, 460);
-            });
+            ChartComponent.create(container, seriesList);
         }
 
         window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
