@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Funding rate — BTC</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { background: #151518; font-family: sans-serif; }
+        body { padding: 20px; }
+        .chart-title { margin-bottom: 16px; font-size: 20px; font-weight: 700; color: #d1d4dc; text-transform: uppercase; }
+        .legend { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #9aa3af; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        #chart { width: 100%; height: 460px; border: 1px solid #2a2a2e; border-radius: 8px; overflow: hidden; }
+    </style>
+</head>
+<body>
+<div class="chart-title">Funding rate — BTC</div>
+<div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#2962FF"></div>Binance</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#E91E63"></div>Bybit</div>
+</div>
+<div id="chart"></div>
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<script>
+    async function fetchJson(url) {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`);
+        return res.json();
+    }
+
+    async function main() {
+        const [binance, bybit] = await Promise.all([
+            fetchJson('./funding_rate_data/binance/btc.json'),
+            fetchJson('./funding_rate_data/bybit/btc.json'),
+        ]);
+
+        const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+            width: document.getElementById('chart').clientWidth,
+            height: 460,
+            timeScale: { timeVisible: true },
+            layout: { background: { color: '#151518' }, textColor: '#d1d4dc' },
+            grid: { vertLines: { color: '#2a2a2e' }, horzLines: { color: '#2a2a2e' } },
+            crosshair: {
+                vertLine: { color: '#758696', labelBackgroundColor: '#3d5068' },
+                horzLine: { color: '#758696', labelBackgroundColor: '#3d5068' },
+            },
+            rightPriceScale: { visible: true },
+        });
+
+        const s1 = chart.addSeries(LightweightCharts.HistogramSeries, { color: '#2962FF', priceScaleId: 'right', lastValueVisible: true, priceLineVisible: false });
+        s1.setData(binance);
+        const s2 = chart.addSeries(LightweightCharts.HistogramSeries, { color: '#E91E63', priceScaleId: 'right', lastValueVisible: true, priceLineVisible: false });
+        s2.setData(bybit);
+
+        chart.timeScale().fitContent();
+        window.addEventListener('resize', () => chart.resize(document.getElementById('chart').clientWidth, 460));
+    }
+
+    main().catch(console.error);
+</script>
+</body>
+</html>
