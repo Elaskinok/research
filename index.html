@@ -10,36 +10,6 @@
   </style>
 </head>
 <body>
-  <div id="chart"></div>
-
-  <script type="module">
-    import { createChart, LineSeries } from 'https://unpkg.com/lightweight-charts/dist/lightweight-charts.production.mjs';
-
-    const chart = createChart(document.getElementById('chart'), {
-      layout: {
-        background: { color: '#ffffff' },
-        textColor: '#333',
-      },
-      width: window.innerWidth,
-      height: window.innerHeight,
-      timeScale: {
-        timeVisible: true,
-      },
-    });
-
-    const lineSeries = chart.addSeries(LineSeries);
-
-    const resp = await fetch('./data.json');
-    const data = await resp.json();
-
-    lineSeries.setData(data);
-
-    window.addEventListener('resize', () => {
-      chart.applyOptions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    });
-  </script>
+  <p>Hello world!</p>
 </body>
 </html>
