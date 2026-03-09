@@ -9,7 +9,7 @@
             margin: 0;
             font-family: sans-serif;
             background: #0e0e10;
-            padding: 32px 24px;
+            padding: 32px 5%;
         }
 
         h1 {
@@ -19,11 +19,18 @@
             color: #d1d4dc;
         }
 
-        iframe {
+        .chart-card {
+            background: #151518;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .chart-card iframe {
             display: block;
-            width: 90%;
-            margin: 0 auto;
-            height: 0;
+            width: 100%;
+            height: 520px;
             border: none;
         }
     </style>
@@ -33,28 +40,18 @@
 <div id="charts"></div>
 
 <script>
-    const iframeMap = new WeakMap();
-
-    window.addEventListener('message', e => {
-        if (e.data?.iframeHeight) {
-            for (const iframe of document.querySelectorAll('iframe')) {
-                if (iframe.contentWindow === e.source) {
-                    iframe.style.height = e.data.iframeHeight + 'px';
-                    break;
-                }
-            }
-        }
-    });
-
     fetch('./charts.json')
         .then(r => r.json())
         .then(srcs => {
             const container = document.getElementById('charts');
             for (const src of srcs) {
+                const card = document.createElement('div');
+                card.className = 'chart-card';
                 const iframe = document.createElement('iframe');
                 iframe.src = src;
                 iframe.scrolling = 'no';
-                container.appendChild(iframe);
+                card.appendChild(iframe);
+                container.appendChild(card);
             }
         });
 </script>

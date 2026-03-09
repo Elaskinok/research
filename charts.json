@@ -1,1 +1,5 @@
-["funding_rate_yield_Y.html"]
+[
+  "funding_rate_yield_Y_btc.html",
+  "funding_rate_yield_Y_eth.html",
+  "funding_rate_yield_Y_sol.html"
+]
