@@ -6,13 +6,13 @@
     <title>Funding rate yearly yield %</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: sans-serif; background: white; padding: 20px; }
+        body { font-family: sans-serif; background: #151518; padding: 20px; }
 
         .chart-title {
             margin-bottom: 16px;
             font-size: 20px;
             font-weight: 700;
-            color: #222;
+            color: #d1d4dc;
             text-transform: uppercase;
         }
 
@@ -21,8 +21,9 @@
         #error {
             margin-bottom: 12px;
             padding: 8px 12px;
-            background: #fee;
-            border: 1px solid #f99;
+            background: #3a1a1a;
+            border: 1px solid #7a3a3a;
+            color: #f99;
             display: none;
         }
     </style>
@@ -71,6 +72,14 @@
             width: chartContainer.clientWidth,
             height: 460,
             timeScale: { timeVisible: true },
+            layout: {
+                background: { color: '#151518' },
+                textColor: '#d1d4dc',
+            },
+            grid: {
+                vertLines: { color: '#2a2a2e' },
+                horzLines: { color: '#2a2a2e' },
+            },
         });
 
         await Promise.all(exchangesWithCoin.map(async (exchange, i) => {
