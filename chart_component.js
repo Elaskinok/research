@@ -15,10 +15,24 @@ window.ChartComponent = {
             vertLine: { color: '#758696', labelBackgroundColor: '#3d5068' },
             horzLine: { color: '#758696', labelBackgroundColor: '#3d5068' },
         },
+        leftPriceScale: { visible: true },
+        rightPriceScale: { visible: false },
     },
 
     // seriesList: [{ label: string, data: [{time, value}] }, ...]
     create(container, seriesList) {
+        // Legend
+        const legend = document.createElement('div');
+        legend.style.cssText = 'display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;';
+        seriesList.forEach(({ label }, i) => {
+            const color = this.COLORS[i % this.COLORS.length];
+            const item = document.createElement('div');
+            item.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:13px;color:#9aa3af;font-family:sans-serif;';
+            item.innerHTML = `<span style="width:12px;height:12px;border-radius:50%;background:${color};flex-shrink:0;"></span>${label}`;
+            legend.appendChild(item);
+        });
+        container.parentElement.insertBefore(legend, container);
+
         const chart = LightweightCharts.createChart(container, {
             width: container.clientWidth,
             height: 460,
@@ -26,10 +40,12 @@ window.ChartComponent = {
             ...this.THEME,
         });
 
-        seriesList.forEach(({ label, data }, i) => {
+        seriesList.forEach(({ data }, i) => {
             const series = chart.addSeries(LightweightCharts.LineSeries, {
                 color: this.COLORS[i % this.COLORS.length],
-                title: label,
+                priceScaleId: 'left',
+                lastValueVisible: false,
+                priceLineVisible: false,
             });
             series.setData(data);
         });
