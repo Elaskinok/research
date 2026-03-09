@@ -43,7 +43,7 @@ window.ChartComponent = {
             const series = chart.addSeries(LightweightCharts.LineSeries, {
                 color: this.COLORS[i % this.COLORS.length],
                 priceScaleId: 'right',
-                lastValueVisible: false,
+                lastValueVisible: true,
                 priceLineVisible: false,
             });
             series.setData(data);
