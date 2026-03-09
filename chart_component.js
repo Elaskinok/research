@@ -15,8 +15,7 @@ window.ChartComponent = {
             vertLine: { color: '#758696', labelBackgroundColor: '#3d5068' },
             horzLine: { color: '#758696', labelBackgroundColor: '#3d5068' },
         },
-        leftPriceScale: { visible: true },
-        rightPriceScale: { visible: false },
+        rightPriceScale: { visible: true },
     },
 
     // seriesList: [{ label: string, data: [{time, value}] }, ...]
@@ -43,7 +42,7 @@ window.ChartComponent = {
         seriesList.forEach(({ data }, i) => {
             const series = chart.addSeries(LightweightCharts.LineSeries, {
                 color: this.COLORS[i % this.COLORS.length],
-                priceScaleId: 'left',
+                priceScaleId: 'right',
                 lastValueVisible: false,
                 priceLineVisible: false,
             });
