@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Chart</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+    #chart { width: 100%; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="chart"></div>
+
+  <script type="module">
+    import { createChart, LineSeries } from 'https://unpkg.com/lightweight-charts/dist/lightweight-charts.production.mjs';
+
+    const chart = createChart(document.getElementById('chart'), {
+      layout: {
+        background: { color: '#ffffff' },
+        textColor: '#333',
+      },
+      width: window.innerWidth,
+      height: window.innerHeight,
+      timeScale: {
+        timeVisible: true,
+      },
+    });
+
+    const lineSeries = chart.addSeries(LineSeries);
+
+    const resp = await fetch('./data.json');
+    const data = await resp.json();
+
+    lineSeries.setData(data);
+
+    window.addEventListener('resize', () => {
+      chart.applyOptions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    });
+  </script>
+</body>
+</html>
