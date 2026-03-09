@@ -19,15 +19,7 @@
             color: #d1d4dc;
         }
 
-        .chart-card {
-            background: #151518;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-            margin: 0 5% 24px;
-            overflow: hidden;
-        }
-
-        .chart-card iframe {
+        iframe {
             width: 100%;
             height: 0;
             border: none;
@@ -58,12 +50,9 @@
         .then(srcs => {
             const container = document.getElementById('charts');
             for (const src of srcs) {
-                const card = document.createElement('div');
-                card.className = 'chart-card';
                 const iframe = document.createElement('iframe');
                 iframe.src = src;
-                card.appendChild(iframe);
-                container.appendChild(card);
+                container.appendChild(iframe);
             }
         });
 </script>
