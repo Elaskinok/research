@@ -29,7 +29,7 @@
 
         .chart-card iframe {
             width: 100%;
-            height: 540px;
+            height: 0;
             border: none;
             display: block;
         }
@@ -40,6 +40,19 @@
 <div id="charts"></div>
 
 <script>
+    const iframeMap = new WeakMap();
+
+    window.addEventListener('message', e => {
+        if (e.data?.iframeHeight) {
+            for (const iframe of document.querySelectorAll('iframe')) {
+                if (iframe.contentWindow === e.source) {
+                    iframe.style.height = e.data.iframeHeight + 'px';
+                    break;
+                }
+            }
+        }
+    });
+
     fetch('./charts.json')
         .then(r => r.json())
         .then(srcs => {
