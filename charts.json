@@ -1,13 +1,18 @@
 [
   {
+    "tab": "Funding Rate Yields",
+    "charts": [
+      "funding_rate_yield_Y_btc.html",
+      "funding_rate_yield_Y_eth.html",
+      "funding_rate_yield_Y_sol.html"
+    ]
+  },
+  {
     "tab": "Funding Rates",
     "charts": [
       "funding_rate_btc.html",
-      "funding_rate_yield_Y_btc.html",
       "funding_rate_eth.html",
-      "funding_rate_yield_Y_eth.html",
-      "funding_rate_sol.html",
-      "funding_rate_yield_Y_sol.html"
+      "funding_rate_sol.html"
     ]
   }
 ]
